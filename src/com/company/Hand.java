@@ -4,9 +4,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class Hand {
-    private ArrayList<Card> hand;
-    private int[] values;
-    private String[] suits;
+    private final ArrayList<Card> hand;
+    private final int[] values;
+    private final String[] suits;
+    private double result = 0.0;
 
     public Hand(ArrayList<Card> cards) {
         hand = cards;
@@ -45,42 +46,48 @@ public class Hand {
 
     public double rankTheHand()
     {
+
         double ranking = 0;
+        String rankja = "";
 
         if (isPair() > 1.0)
         {
             ranking = isPair();
         }
-        else if (isTwoPair() > 2.0)
+
+        if (isTwoPair() > 2.0)
         {
             ranking = isTwoPair();
         }
-        else if (isThreeOfAKind() > 3.0)
+
+        if (isThreeOfAKind() > 3.0)
         {
             ranking = isThreeOfAKind();
         }
-        else if (isStraight() > 4.0)
+
+        if (isStraight() > 4.0)
         {
             ranking = isStraight();
         }
-        else if (isFlush() > 5.0)
+
+        if (isFlush() > 5.0)
         {
             ranking = isFlush();
         }
-        else if (isFullHouse() > 6.0)
+
+        if (isFullHouse() > 6.0)
         {
             ranking = isFullHouse();
         }
-        else if (isFourOfAKind() > 7.0)
+
+        if (isFourOfAKind() > 7.0)
         {
             ranking = isFourOfAKind();
         }
-        else if(isStraightFlush() > 8.0)
+
+        if(isStraightFlush() > 8.0)
         {
             ranking = isStraightFlush();
-        }
-        else{
-
         }
 
         return ranking;
@@ -90,7 +97,7 @@ public class Hand {
 
     //Ha pár, akkor 1.0 az értéke plusz a tizedesjegyek.
     public double isPair() {
-        double result = 0.0;
+        result = 0.0;
 
         for (int i = 0; i < values.length - 1; i++) {
             if (values[i] == values[i + 1]) {
@@ -102,28 +109,28 @@ public class Hand {
     }
 
     public double isTwoPair() {
-        double result = 0.0;
+        result = 0.0;
         double value = 0.0;
         int counter = 0; //Párok száma
 
-        for (int i = 0; i < values.length - 1; i++) {
-            if (values[i] == values[i + 1]) {
-                counter++;
+            for (int i = 0; i < values.length - 1; i++) {
+                if (values[i] == values[i + 1]) {
+                    counter++;
 
-                value = values[i] * 0.01;
+                    value = values[i] * 0.01;
+                }
             }
-        }
 
         if (counter == 2) {
             result = 2.0 + value;
+
         }
 
         return result;
     }
 
     public double isThreeOfAKind() {
-        double result = 0.0;
-        int counter = 0;
+        result = 0.0;
 
         for (int i = 0; i < values.length - 2; i++) {
             if (values[i] == values[i + 1] && values[i] == values[i + 2]) {
@@ -135,29 +142,39 @@ public class Hand {
     }
 
     public double isStraight() {
-        double result = 0.0;
+        result = 0.0;
+        int count = 0;
 
         for (int i = 0; i < values.length - 1; i++){
             if (values[i] == values[i + 1] - 1) {
                 result = 4.0 + (values[i + 1] * 0.01);
+                count++;
+
             } else {
                 result = 0.0;
+
             }
         }
-
+        if (count<4)
+        {
+            result = 0;
+        }
         return result;
+
     }
 
     public double isFlush() {
-        double result = 0.0;
+        result = 0.0;
+        int counter = 0;
 
         String suit = suits[0];
 
-        for (int i = 0; i < suits.length; i++) {
-            result = 5.0 + (values[i] * 0.01);
-
-            if (suits[i].equals(suit) == false) {
-                result = 0.0;
+        for (int i = 0; i < suits.length-1; i++) {
+            if (suits[i] == suits[i+1]) {
+                counter++;
+                if (counter==4) {
+                    result = 5.0 + (values[i] * 0.01);
+                }else{ result = 0.0;}
             }
         }
 
@@ -165,7 +182,7 @@ public class Hand {
     }
 
     public double isFullHouse() {
-        double result = 0.0;
+        result = 0.0;
         boolean one = false;
         boolean two = false;
 
@@ -187,7 +204,7 @@ public class Hand {
     }
 
     public double isFourOfAKind() {
-        double result = 0.0;
+        result = 0.0;
         int counter = 0;
 
         for (int i = 0; i < values.length - 3; i++) {
@@ -200,7 +217,7 @@ public class Hand {
     }
 
     public double isStraightFlush() {
-        double result = 0.0;
+        result = 0.0;
 
         if (isStraight() > 4.0 && isFlush() > 5.0) {
             result = 8.0 + isStraight() - 4.0;
